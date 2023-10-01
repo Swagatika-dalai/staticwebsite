@@ -3,6 +3,7 @@ resource "aws_s3_bucket" "mybucket" {
   bucket = var.bucketname
 }
 
+#everything inside the bucket owns by the bucket owner itself. No one other that us can change anything .
 resource "aws_s3_bucket_ownership_controls" "example" {
   bucket = aws_s3_bucket.mybucket.id
 
@@ -11,6 +12,7 @@ resource "aws_s3_bucket_ownership_controls" "example" {
   }
 }
 
+#To make the bucket public .
 resource "aws_s3_bucket_public_access_block" "example" {
   bucket = aws_s3_bucket.mybucket.id
 
@@ -20,6 +22,7 @@ resource "aws_s3_bucket_public_access_block" "example" {
   restrict_public_buckets = false
 }
 
+#with public-read ACL all bucket objects will be publicly exposed .
 resource "aws_s3_bucket_acl" "example" {
   depends_on = [
     aws_s3_bucket_ownership_controls.example,
@@ -30,6 +33,7 @@ resource "aws_s3_bucket_acl" "example" {
   acl    = "public-read"
 }
 
+#Putting objects in S3 bucket
 resource "aws_s3_object" "index" {
   bucket = aws_s3_bucket.mybucket.id
   key = "index.html"
@@ -53,6 +57,7 @@ resource "aws_s3_object" "profile" {
   acl = "public-read"
 }
 
+#enable s3 static website hosting 
 resource "aws_s3_bucket_website_configuration" "website" {
   bucket = aws_s3_bucket.mybucket.id
   index_document {
